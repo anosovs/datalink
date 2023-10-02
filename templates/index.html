@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datalink</title>
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+        }
+        .bottom {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        button{
+            padding: 4px;
+        }
+
+    </style>
+</head>
+<body>
+    <form action="" method="post">
+        <textarea name="message" cols="30" rows="10" placeholder="Enter message"></textarea>
+        <div class="bottom">
+            <div class="count">
+                <span>Enter count to show:</span>
+                <select name="count">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>            
+            <button type="submit">Submit</button>
+        </div>        
+    </form>
+    
+</body>
+</html>
