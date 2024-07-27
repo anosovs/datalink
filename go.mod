@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/stephenafamo/isbot v0.0.0-20221001104755-8097440ac07e
 )

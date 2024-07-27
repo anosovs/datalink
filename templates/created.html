@@ -6,10 +6,20 @@
     <title>Datalink</title>
 </head>
 <body>
-    Share this link to your body:<br> {{ .Link}}
+    Link available until: <b>{{ .DeleteAfter }}</b><br>
+    Share this link to your body:<br> 
+    <div class="link">
+        {{ .Link}}
+    </div>
     <br>
-    <br>
-    <br>
+    <button class="copy">Copy Link</button><br><br><br>
     <a href="/">Back</a>
+    <script>
+        let msg = document.querySelector('.link')
+        let btn = document.querySelector('.copy')
+        btn.addEventListener('click', ()=>{
+            navigator.clipboard.writeText(msg.textContent)
+        })
+    </script>
 </body>
 </html>

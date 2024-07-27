@@ -5,18 +5,21 @@ import (
 	"path"
 	"strconv"
 	"text/template"
+	"time"
 
-	"github.com/anosovs/datalink/internal/storage/sqlite"
+	"github.com/anosovs/datalink/internal/storage"
 	"github.com/go-chi/chi/v5"
 )
 
 type Handler struct {
-	Storage sqlite.Storage
+	Storage storage.Storage
+	DeleteAfter int
 }
 
-func Init (storage sqlite.Storage) *Handler{
+func Init (storage storage.Storage, deleteAfter int) *Handler{
 	return &Handler{
 		Storage: storage,
+		DeleteAfter: deleteAfter,
 	}
 }
 
@@ -35,6 +38,7 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 
 type URL struct {
 	Link string
+	DeleteAfter string
 }
 
 func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
@@ -51,9 +55,12 @@ func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	
+	availableUntil := time.Now().Add(time.Hour * 24 * time.Duration(h.DeleteAfter))
 
 	Link := URL{
 		Link: "",
+		DeleteAfter: availableUntil.Format("2006-01-02 15:04:05"),
 	}
 	if r.TLS != nil {
 		Link.Link = "https://"
@@ -61,7 +68,7 @@ func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
 		Link.Link = "http://"
 	}
 	
-	Link.Link += r.Host +"/"+ uuid
+	Link.Link += r.Host +"/show/"+ uuid
 	fp := path.Join("templates", "created.html")
     tmpl, err := template.ParseFiles(fp)
 	if err != nil {
@@ -80,6 +87,11 @@ type Message struct {
 
 func (h *Handler) Show(w http.ResponseWriter, r *http.Request) {
 	uuid := chi.URLParam(r, "uuid")
+	err := h.Storage.DeleteOldMessages(h.DeleteAfter)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+	}
 	msg, cnt, err := h.Storage.GetMsg(uuid)
 	if err != nil {
 		http.Error(w, "404 not found", http.StatusNotFound)
