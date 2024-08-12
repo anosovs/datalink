@@ -10,3 +10,9 @@ Required .env file in app root directory.
 - **SERVER_HOST** - where app hosted, example "127.0.0.1:8080". Default: ":8080"
 - **STORAGE** - enum(sqlite, ram). Which type of storage to use
 - **DELETE_AFTER** - Message will be erased after this count of days
+
+### Usage  
+Create .env in app dir  
+In app dir `docker build -t datalink .`  
+After `docker run -it -p 8080:8080 datalink`  
+Visit http://localhost:8080/  
