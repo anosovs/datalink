@@ -14,12 +14,14 @@ import (
 type Handler struct {
 	Storage storage.Storage
 	DeleteAfter int
+	EnableHttps bool
 }
 
-func Init (storage storage.Storage, deleteAfter int) *Handler{
+func Init (storage storage.Storage, deleteAfter int, enableHttps bool) *Handler{
 	return &Handler{
 		Storage: storage,
 		DeleteAfter: deleteAfter,
+		EnableHttps: enableHttps,
 	}
 }
 
@@ -62,7 +64,8 @@ func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
 		Link: "",
 		DeleteAfter: availableUntil.Format("2006-01-02 15:04:05"),
 	}
-	if r.TLS != nil {
+	
+	if h.EnableHttps {
 		Link.Link = "https://"
 	} else {
 		Link.Link = "http://"

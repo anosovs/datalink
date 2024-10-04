@@ -11,6 +11,7 @@ type Config struct {
 	ServerHost string
 	Storage string
 	DeleteAfter int
+	EnableHttps bool
 }
 
 func Init() (*Config, error) {
@@ -26,9 +27,15 @@ func Init() (*Config, error) {
 		deleteAfter = 3
 	}
 
+	enableHttps, err := strconv.ParseBool(os.Getenv("ENABLE_HTTPS"))
+	if err != nil {
+		enableHttps = false
+	}
+
 	return &Config{
 		ServerHost: serverHost,
 		Storage: storage,
 		DeleteAfter: deleteAfter,
+		EnableHttps: enableHttps,
 	}, nil
 }
