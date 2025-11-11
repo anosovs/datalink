@@ -15,30 +15,39 @@ type Handler struct {
 	Storage storage.Storage
 	DeleteAfter int
 	EnableHttps bool
+	Title string
 }
 
-func Init (storage storage.Storage, deleteAfter int, enableHttps bool) *Handler{
+func Init (storage storage.Storage, deleteAfter int, enableHttps bool, title string) *Handler{
 	return &Handler{
 		Storage: storage,
 		DeleteAfter: deleteAfter,
 		EnableHttps: enableHttps,
+		Title: title,
 	}
 }
 
+type IndexData struct {
+	Title string
+}
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
+	indexData := IndexData {
+		Title: h.Title,
+	}
 	fp := path.Join("templates", "index.html")
     tmpl, err := template.ParseFiles(fp)
 	if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
-	if err := tmpl.Execute(w, ""); err != nil {
+	if err := tmpl.Execute(w, indexData); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 }
 
 type URL struct {
+	Title string
 	Link string
 	DeleteAfter string
 }
@@ -63,6 +72,7 @@ func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
 	Link := URL{
 		Link: "",
 		DeleteAfter: availableUntil.Format("2006-01-02 15:04:05"),
+		Title: h.Title,
 	}
 	
 	if h.EnableHttps {
@@ -86,6 +96,7 @@ func (h *Handler) Save(w http.ResponseWriter, r *http.Request) {
 
 type Message struct {
 	Message string
+	Title string
 }
 
 func (h *Handler) Show(w http.ResponseWriter, r *http.Request) {
@@ -107,6 +118,7 @@ func (h *Handler) Show(w http.ResponseWriter, r *http.Request) {
 	}
 	data := Message{
 		Message: msg,
+		Title: h.Title,
 	}
 
 	fp := path.Join("templates", "show.html")

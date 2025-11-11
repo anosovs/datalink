@@ -40,7 +40,7 @@ func main(){
 		panic("can't init storage")
 	}
 
-	handler := handler.Init(storage, cfg.DeleteAfter, cfg.EnableHttps)
+	handler := handler.Init(storage, cfg.DeleteAfter, cfg.EnableHttps, cfg.HtmlTitle)
 
 	r := chi.NewRouter()
 	r.Use(middleware.CheckBot)

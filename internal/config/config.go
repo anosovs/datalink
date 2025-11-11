@@ -12,6 +12,7 @@ type Config struct {
 	Storage string
 	DeleteAfter int
 	EnableHttps bool
+	HtmlTitle string
 }
 
 func Init() (*Config, error) {
@@ -32,10 +33,16 @@ func Init() (*Config, error) {
 		enableHttps = false
 	}
 
+	htmlTitle := os.Getenv("HTML_TITLE")
+	if htmlTitle == "" {
+		htmlTitle = "Datalink"
+	}
+
 	return &Config{
 		ServerHost: serverHost,
 		Storage: storage,
 		DeleteAfter: deleteAfter,
 		EnableHttps: enableHttps,
+		HtmlTitle: htmlTitle,
 	}, nil
 }
